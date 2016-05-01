@@ -99,7 +99,8 @@ body {
 <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
 <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
-<script src="/src/datamaps.world.min.js?v=1"></script>
+<script src="node_modules/datamaps/dist/datamaps.world.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 
 <div id="container" style="position: relative; width: 500; height: 300;"></div>
 </head>
@@ -109,10 +110,22 @@ body {
   <div id="titlediv">Attack Map</div>
   </div>
 
+<script>
+  var socket = io();
+
+io.on('connection', function(socket){
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+    
+  });
+});
+
+
+</script>
 
 <script>
 
-  var arcs = new Datamap({
+  var maps = new Datamap({
   element: document.getElementById("container"),
   responsive: true,
  projection: 'mercator',
@@ -149,7 +162,7 @@ body {
   
 });
 
-arcs.graticule();
+maps.graticule();
 var fbdestination = "destination: {latitude: 37.636519, longitude: -122.120506}"
 var dests = new Array ();
 //console.log(fbdestination);
@@ -170,10 +183,18 @@ d3.csv("data.csv", function(data) {
  
 
       function addArcs(index) {
-        arcs.arc(dests.slice(0, index) );
+        maps.arc(dests.slice(0, index) );
         if ( index < dests.length ) {
             window.setTimeout(function() {
+   
+
+              maps.svg.selectAll('path.datamaps-arc').remove();
+
+
               addArcs(++index)
+              console.log (dests[index]);
+              //dests[index].origin = dests[index].destination
+
             }, 750);
         }
 		
@@ -182,18 +203,7 @@ d3.csv("data.csv", function(data) {
 
 addArcs(1);	
 
-      function delArcs(index2) {
-        arcs.arc(dests.slice(0, index2), {strokeWidth:3 , strokeColor: 'rgba(255,0,0,0)', greatArc: true,animationSpeed: 600} );
-        if ( index2 < dests.length ) {
-            window.setTimeout(function() {
-              addArcs(++index2);
-		console.log(index2);
-            }, 600);
-        }
-		
 
-    }
-delArcs(1);
 
  
  
@@ -203,9 +213,9 @@ delArcs(1);
 
             // Pure JavaScript
     window.addEventListener('resize', function() {
-        arcs.resize();
+        maps.resize();
     });
-    
+   //maps.svg.selectAll('path.datamaps-arc').remove();
 
 </script>
     

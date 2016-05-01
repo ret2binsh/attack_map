@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+}
+
+#titlediv {
+  font-family: monospace;
+  text-align: center;
+  font-size:48px;
+  position:fixed;
+  width:100%;
+  height:50px;
+  color:white;
+  background-color:black;
+  padding:5px;
+  top:0px;
+  overflow-y: auto;
+}
+
+#attackdiv {
+  font-family: monospace;
+  font-size:10px;
+  position:fixed;
+  width:50%;
+  height:100px;
+  color:white;
+  background-color:black;
+  padding:5px;
+  bottom:0px;
+  overflow-y: auto;
+}
+
+#container1 {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-width:100%;
+  max-height:100%
+}
+
+#about {
+  display: hidden;
+}
+
+#aboutdiv {
+  text-align:right;
+  width:100px;
+  height:100px;
+  top:0px;
+  right:0px;
+  position:fixed;
+  padding:10px;
+  color: white;
+}
+
+#ccdiv {
+  text-align:right;
+  width:100px;
+  height:20px;
+  bottom:0px;
+  right:0px;
+  position:fixed;
+  padding:5px;
+  color: white;
+}
+
+#about {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000;}
+
+/* Container */
+#simplemodal-container {height:460px; width:600px; color:#bbb; background-color:#333; border:4px solid #444; padding:12px;}
+#simplemodal-container .simplemodal-data {padding:8px;}
+#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a {color:#ddd;}
+#simplemodal-container a.modalCloseImg {background:url(../img/basic/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+#simplemodal-container h3 {color:#84b8d9;}
+#simplemodal-container a.modalCloseImg {
+  background:url(x.png) no-repeat; /* adjust url as required */
+  width:25px;
+  height:29px;
+  display:inline;
+  z-index:3200;
+  position:absolute;
+  top:-15px;
+  right:-18px;
+  cursor:pointer;
+}
+
+</style>
+
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="/src/datamaps.world.min.js?v=1"></script>
+
+<div id="container" style="position: relative; width: 500; height: 300;"></div>
+</head>
+
+<body>
+
+  <div id="titlediv">Fremont Bank Attack Map</div>
+ 
+
+
+<script>
+
+  var arcs = new Datamap({
+  element: document.getElementById("container"),
+  responsive: true,
+ projection: 'winkel3',
+  scope: 'world',
+  projectionConfig: {
+          rotation: [97,-30]
+        },
+   
+  fills: {
+  // defaultFill: "#ABDDA4",
+  //  win: '#0fa0fa'
+      
+  },
+  data: {
+
+    'CO': { fillKey: 'win' }
+  },
+  
+          geographyConfig: {
+          dataUrl: null,
+          hideAntarctica: true,
+          borderWidth: 0.75,
+          borderColor: '#4393c3',
+          popupTemplate: function(geography, data) {
+            return '<div class="hoverinfo" style="color:white;background:black">' +
+                   geography.properties.name + '</div>';
+          },
+          popupOnHover: true,
+          highlightOnHover: true,
+          highlightFillColor: 'black',
+          highlightBorderColor: 'rgba(250, 15, 160, 1)',
+          highlightBorderWidth: 2
+        }
+  
+});
+
+//arcs.graticule();
+var fbdestination = "destination: {latitude: 37.636519, longitude: -122.120506}"
+var dests = new Array ();
+var blackdests = new Array ();
+
+
+//console.log(fbdestination);
+d3.csv("data.csv", function(data) {
+    data.forEach(function(d) {
+	
+	
+	var latnum = Number(d.latitude);
+	var longnum = Number(d.longitude);
+	
+	var destmember = {origin: {latitude: latnum , longitude: longnum}, destination: {latitude: 37.636519, longitude: -122.120506}, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true,animationSpeed: 600}}
+	
+	var cleardestmember = {origin: {latitude: latnum , longitude: longnum}, destination: {latitude: 37.636519, longitude: -122.120506}, options: {strokeWidth:3 , strokeColor: 'rgba(0, 0, 0, 1)', greatArc: true,animationSpeed: 700}}
+	
+	dests.push(destmember);
+
+	
+	//dests.push(cleardestmember);	
+	
+ } 
+
+
+ ) 
+ 
+
+ 
+ 
+ 
+      function addArcs(index) {
+        arcs.arc(dests.slice(0, index) );
+        if ( index < dests.length ) {
+            window.setTimeout(function() {
+              addArcs(++index);
+			  
+		    d3.selectAll('.country').transition()  
+      .duration(750)  // give it a smooth time period for the transition
+      .attr('fill-opacity', function(d) {
+        return getColor(d.properties[attributeArray[currentAttribute]], dataRange);  // the end color value
+      })	  
+			  
+			  
+			 // console.log (dests)
+            }, 750);
+        }
+		
+
+    }
+
+addArcs(1);	
+
+
+
+
+
+ 
+ 
+ 
+}  );
+
+
+
+
+
+            // Pure JavaScript
+    window.addEventListener('resize', function() {
+        arcs.resize();
+    });
+    
+
+</script>
+
+<script>
+	arcs.svg.selectAll('path.datamaps-arc').remove()
+	//arcs.arc( data, optionsWithNewColours)
+</script>
+    
+    
+    
+    
+
+</body>
