@@ -1,0 +1,29 @@
+{
+  "name": "maps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "datamaps.js",
+  "dependencies": {
+    "connect": "^3.4.1",
+    "datamaps": "^0.5.1",
+    "express": "^4.13.4",
+    "http-server": "^0.9.0",
+    "serve-static": "^1.10.2",
+    "socket.io": "^1.4.5",
+    "sockjs": "^0.3.16"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshftx/maps.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshftx/maps/issues"
+  },
+  "homepage": "https://github.com/joshftx/maps#readme"
+}
