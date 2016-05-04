@@ -27,68 +27,7 @@ var fbdestination = [{origin: {latitude: 38.895111,longitude: -77.036667}, desti
                 latitude: 37.6688,
                 longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
 
-                {origin: {latitude: -41,longitude: 174}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 60,longitude: 100}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: -10,longitude: -76 }, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 38.895111,longitude: -77.036667}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 38.895111,longitude: -77.036667}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 60,longitude: 100}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 49,longitude: 32}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 38.895111,longitude: -77.036667}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 38,longitude: -97}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 23,longitude: -102}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-
-
-
-
-
-
-
-
-
-
                 ]
-
-
-
-
-
-
-
-
-
-
-
 
 
 io.on('connection', function(socket){
@@ -96,8 +35,8 @@ io.on('connection', function(socket){
 
 for (i = 0; i < fbdestination.length; i++) {
 
- socket.emit('message', {'message': fbdestination[i], for: 'everyone'});
 
+ socket.emit('message', {'message': fbdestination[i], for: 'everyone'});
 }
 
   socket.on('disconnect', function(){
