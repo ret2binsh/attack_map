@@ -301,13 +301,14 @@ function about() {
 
 
 
-         hits.push(msg.origin, destination: {latitude: 32.066667, longitude: 34.783333 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}});
+         hits.push(data.message);
 
          map.arc(hits);
 
          // add boom to the bubbles queue
 
-         boom.push( { radius: 7, latitude: 32.066667, longitude: 34.783333,
+         boom.push( { radius: 7, latitude: 37.6688,
+                longitude: -122.0808 ,
                       fillOpacity: 0.5, attk: 'test' });
          map.bubbles(boom, {
               popupTemplate: function(geo, data) {
