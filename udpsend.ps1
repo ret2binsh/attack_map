@@ -25,6 +25,17 @@ for this sample, a port was chosen (20000).
 $Port = 514  
 $IP = "127.0.0.1"   
 $Address = [system.net.IPAddress]::Parse( $IP )  
+$csv = "c:\scripts\maps\ips.csv"  
+$IPS = import-csv $csv
+foreach ($IPaddress in $IPS){
+start-sleep -s 3
+$bot = $ipaddress.sourceip
+
+  
+  
+  
+  
+  
   
 # Create IP Endpoint   
 $End = New-Object System.Net.IPEndPoint $address , $port   
@@ -41,7 +52,7 @@ $sock.Connect( $end )
   
 # Create encoded buffer   
 $Enc      = [System.Text.Encoding]::UTF8  
-$Message = "IP 216.16.201.185"  
+$Message = "IP " + $bot
 $Buffer   = $Enc.GetBytes( $Message )  
   
 # Send the buffer   
@@ -50,3 +61,4 @@ $Sent   = $Sock.Send( $Buffer )
 "Message is:"   
 $Message   
 # End of Script
+}
