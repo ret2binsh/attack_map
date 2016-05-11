@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Geolocator Example</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="text/javascript" src="../src/geolocator.js"></script>
+	<script type="text/javascript">
+        // Success Callback
+		function onGeoSuccess(location) {
+		    console.log(location);
+		    var strLocation = '<b>Latitude:</b> ' + location.coords.latitude + '<br />' +
+		                    '<b>Longitude:</b> ' + location.coords.longitude + '<br />' +
+		                    '<b>City:</b> ' + location.address.city + '<br />' +
+		                    '<b>Country:</b> ' + location.address.country + '<br />' +
+		                    '<b>Country Code:</b> ' + location.address.countryCode + '<br />' +
+		                    '<b>Region:</b> ' + location.address.region + '<br />' +
+                            '<br /><span class="info">See console logs for the full properties of the "location" object.</span>'
+		    document.getElementById('geo-details').innerHTML = strLocation;
+		}
+        // Error Callback
+		function onGeoError(error) {
+		    console.log(error);
+            // To check if this is a HTML5 `PositionError`:
+            // console.log(geolocator.isPositionError(error));
+		}
+        // Load Event Handler
+		window.onload = function () {
+            // Locate by IP on load
+            geolocator.locateByIP(onGeoSuccess, onGeoError, 1, 'map-canvas');
+            // Configure controls
+            var cmbSource = document.getElementById('cmb-source'),
+                btnLocateByIP = document.getElementById('btn-locate-ip'),
+                btnLocateHTML5 = document.getElementById('btn-locate'),
+                chkFallback = document.getElementById('chk-fallback');
+            // Click Event Handlers
+            btnLocateByIP.onclick = function() {
+                geolocator.locateByIP(onGeoSuccess, onGeoError, cmbSource.selectedIndex, 'map-canvas');
+            }
+            btnLocateHTML5.onclick = function() {
+                var html5Options = { enableHighAccuracy: true, timeout: 6000, maximumAge: 0 },
+                    ipFallbackIndex = chkFallback.checked ? cmbSource.selectedIndex : -1;
+                geolocator.locate(onGeoSuccess, onGeoError, ipFallbackIndex, html5Options, 'map-canvas');
+                console.log('IP Fallback is ' + (ipFallbackIndex === -1 ? 'disabled' : 'enabled'));
+            }
+		}
+	</script>
+
+</head>
+
+<body>
+
+    <p class="title">Geolocator Example</p>
+    <div id="container">
+        <div id="controls">
+            Geo IP Source: <select id="cmb-source">
+                <option value="0">Free GeoIP</option>
+                <option selected value="1">Geo Plugin</option>
+                <option value="2">Wikimedia</option>
+            </select>&nbsp;<button id="btn-locate-ip">Locate by IP</button> | <button id="btn-locate">Locate (HTML5)</button>
+            <input id="chk-fallback" type="checkbox" checked /> Fallback to IP
+            <br /><span class="info">(Geo IP Source is also used as a fallback when user rejects HTML5 Geo-location or timeout expires.)</span><br />
+        </div>
+        <div id="map-canvas"></div>
+        <div id="geo-details"></div>
+        <br />
+        View <a href="https://github.com/onury/geolocator">project page</a> (and documentation) at GitHub.<br />
+        Geolocator 1.2.8 - Copyright © Onur Yıldırım, 2015. MIT License.
+        <br /><br />
+    </div>
+
+</body>
+
+</html>

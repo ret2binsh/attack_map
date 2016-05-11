@@ -13,34 +13,6 @@ app.use(express.static('public'));
 //   regex for nonpublic IP:    (^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)
 
 
-
-
-var fbdestination = [{origin: {latitude: 38.895111,longitude: -77.036667}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                {origin: {latitude: 60,longitude: -95}, destination: {
-                latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}},
-
-                ]
-
-
-io.on('connection', function(socket){
-  console.log('a user connected');
-
-for (i = 0; i < fbdestination.length; i++) {
-
-
- socket.emit('message', {'message': fbdestination[i], for: 'everyone'});
-}
-
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-});
-
-
 var syslogParser = require('glossy').Parse; // or wherever your glossy libs are
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
@@ -75,13 +47,13 @@ server.on("message", function(rawMessage) {
 		
 		//build an arc array
 		
-		var ipdestination = [{origin: {latitude: +iplatitude,longitude: +iplongitude}, destination: {
+		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
                 latitude: 37.6688,
-                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}]
+                longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
 		
 		console.log(ipdestination)
-		// socket.emit('message', {'message': ipdestination, for: 'everyone'});
-		
+		io.emit('message', {'message': ipdestination, for: 'everyone'});
+
 		
 		
 		
@@ -89,22 +61,22 @@ server.on("message", function(rawMessage) {
 })
 		
 				
-		//endgeolocate
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		//endgeolocat
 		
        // console.log(parsedMessage.host)
     });
 });
+
+
+/* io.on('connection', function(socket){
+  //console.log('a user connected');
+//socket.emit('message', {'message': ipdestination, for: 'everyone'});
+
+socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+ */
 
 server.on("listening", function() {
     var address = server.address();
