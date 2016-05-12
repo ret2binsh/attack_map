@@ -8,7 +8,8 @@ var Syslogd = require('syslogd')
 
 app.use(express.static('public'));
 
-
+////Public IP Addresses are all in range 0.0.0.0 to 255.255.255.255 except private ip addresses.
+// Regular Expression - ^(([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.){3}([0,1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])$
 
 //   regex for nonpublic IP:    (^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.)
 
@@ -26,12 +27,13 @@ server.on("message", function(rawMessage) {
 		console.log(message);
 
 		
-		//regex
+	//	regex
 		
-//		var regip = (^127.)|(^10.)|(^172.1[6-9].)|(^172.2[0-9].)|(^172.3[0-1].)|(^192.168.).exec(message);
-	//	console.log(regip);
+	//	var regip = /(\w*[.]\w*[.]\w*[.]\w*)/.exec(message);
+	//	console.log(regip[1]);
+		//console.log("Found IP " + regip.input);
 		
-		
+		//message = regip[1]
 		
 		//regex end
 		
@@ -42,7 +44,7 @@ server.on("message", function(rawMessage) {
 		var request = require("request")
 
 		var url = "http://api.ipinfodb.com/v3/ip-city/?key=6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb&ip=" + message +  "&format=json"
-		console.log (url);
+		//console.log (url);
 		
 		request({
 		url: url,
@@ -50,9 +52,9 @@ server.on("message", function(rawMessage) {
 	}, function (error, response, body) {
 
     if (!error && response.statusCode === 200) {
-        console.log(body) // Print the json response
+       // console.log(body) // Print the json response
 		
-				var iplatitude = body.latitude
+		var iplatitude = body.latitude
 		var iplongitude = body.longitude
 		
 		//build an arc array
@@ -61,8 +63,8 @@ server.on("message", function(rawMessage) {
                 latitude: 37.6688,
                 longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
 		
-		console.log(ipdestination)
-		io.emit('message', {'message': ipdestination, for: 'everyone'});
+		//console.log(ipdestination)
+		io.emit('message', {'message': body, for: 'everyone'});
 
 		
 		
@@ -78,15 +80,7 @@ server.on("message", function(rawMessage) {
 });
 
 
-/* io.on('connection', function(socket){
-  //console.log('a user connected');
-//socket.emit('message', {'message': ipdestination, for: 'everyone'});
 
-socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-});
- */
 
 server.on("listening", function() {
     var address = server.address();
