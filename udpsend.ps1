@@ -25,7 +25,7 @@ for this sample, a port was chosen (20000).
 $Port = 514  
 $IP = "127.0.0.1"   
 $Address = [system.net.IPAddress]::Parse( $IP )  
-$csv = "c:\scripts\maps\ips.csv"  
+$csv = ".\ips.csv"  
 $IPS = import-csv $csv
 foreach ($IPaddress in $IPS){
 start-sleep -s 3

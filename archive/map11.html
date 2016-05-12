@@ -113,15 +113,13 @@ body {
 <script>
   var socket = io();
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg);
-    
-  });
+socket.on('message', function(data){
+    console.log(data.message);
 });
 
 
 </script>
+
 
 <script>
 
@@ -162,7 +160,9 @@ io.on('connection', function(socket){
   
 });
 
-maps.graticule();
+// maps.graticule();
+
+
 var fbdestination = "destination: {latitude: 37.636519, longitude: -122.120506}"
 var dests = new Array ();
 //console.log(fbdestination);
@@ -188,11 +188,11 @@ d3.csv("data.csv", function(data) {
             window.setTimeout(function() {
    
 
-              maps.svg.selectAll('path.datamaps-arc').remove();
+            //  maps.svg.selectAll('path.datamaps-arc').remove();
 
 
               addArcs(++index)
-              console.log (dests[index]);
+           //   console.log (dests[index]);
               //dests[index].origin = dests[index].destination
 
             }, 750);
