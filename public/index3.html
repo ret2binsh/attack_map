@@ -25,7 +25,7 @@ body {
 
 #attackdiv {
   font-family: monospace;
-  font-size:10px;
+  font-size:14px;
   position:fixed;
   width:50%;
   height:100px;
@@ -33,7 +33,7 @@ body {
   background-color:black;
   padding:5px;
   bottom:0px;
-  overflow-y: auto;
+  overflow-y:hidden;
 }
 
 #container1 {
@@ -120,7 +120,7 @@ function about() {
 
 
   <center><div id="container1"></div></center>
-  <div id="titlediv">FB Attack Map</div>
+  <div id="titlediv">Fremont Bank Attack Map</div>
   <div id="attackdiv"></div>
   <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
 
@@ -155,7 +155,7 @@ function about() {
 
     // gotta add types here if you add more sounds (or delete them)
 
-    audio_type = [ "starwars", "tng", "b5", "wargames", "pew", "galaga" ]
+
 
     // need this to more easily grab URI query parameters
 
@@ -168,7 +168,7 @@ function about() {
 
 
 
-    if (typeof org_name !== 'undefined') { $("#titlediv").text(decodeURI(org_name) + " Attack Map").html() }
+   
 
     // we maintain a fixed queue of "attacks" via this class
     function FixedQueue( size, initialValues ){
@@ -229,7 +229,7 @@ function about() {
         element: document.getElementById('container1'),
         projection: 'winkel3',
         // change the projection to something else only if you have absolutely no cartographic sense
-
+		
         fills: { defaultFill: 'black', },
 
         geographyConfig: {
@@ -249,6 +249,7 @@ function about() {
         },
 
       })
+	  map.graticule();
 
     // we read in a modified file of all country centers
 
@@ -270,7 +271,7 @@ function about() {
 
   
   var socket = io();
-
+ //socket.heartbeatTimeout = 10000
   socket.on('message', function(data){
     console.log(data.message);
     msg = data.message
@@ -284,7 +285,7 @@ function about() {
    //maps.svg.selectAll('path.datamaps-arc').remove()
 		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
             latitude: 37.6688,
-            longitude: -122.0808 }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
+            longitude: -122.0808 }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: false, animationSpeed: 600}}
 
 
 
@@ -319,7 +320,16 @@ function about() {
 
      });
 //
-
+ 
+ 
+  socket.on('disconnect', function() {
+    socketConnectTimeInterval = setInterval(function () {
+      socket.socket.reconnect();
+      if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
+    }, 3000);
+  });
+  
+  
 }
 
 
