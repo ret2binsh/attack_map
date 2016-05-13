@@ -4,8 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var d3   = require('d3');
 var fs = require('fs');
-var Syslogd = require('syslogd')
-var syslogParser = require('glossy').Parse; // or wherever your glossy libs are
+//var Syslogd = require('syslogd')
+//var syslogParser = require('glossy').Parse; // or wherever your glossy libs are
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
 
