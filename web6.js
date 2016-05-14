@@ -11,24 +11,51 @@ var server = dgram.createSocket("udp4");
 
 app.use(express.static('public'));
 
+
+function getMatches(string, regex, index) {
+  index || (index = 1); // default to the first capturing group
+  var matches = [];
+  var match;
+  while (match = regex.exec(string)) {
+    matches.push(match[index]);
+  }
+  return matches;
+}
+
+
+
 server.on("message", function(rawMessage) {
   //  syslogParser.parse(rawMessage.toString('utf8', 0), function(parsedMessage){
-     
-	var parsedmessage = rawMessage;
+
+
+	var myRegEx = /(\w*[.]\w*[.]\w*[.]\w*)/g;
+	var matches = getMatches(rawMessage, myRegEx, 1);
+
+	console.log(matches);
+
+for (i = 0; i < matches.length; i++) { 
+
+
+
+
+
+
+
 
 
 		
 		//	regex
 		
-		var regip = /(\w*[.]\w*[.]\w*[.]\w*)/.exec(parsedmessage);
-		//console.log(regip[1]);
-		if (regip != null && regip[1] != "0.0.0.0") {
-
-		regip.forEach(function(ip){
 
 
-				console.log("Found IP " + ip);
-				messageIP = ip
+		
+
+		if (matches != null && matches[i] != "0.0.0.0") {
+
+
+
+				//console.log("Found IP " + ip);
+			//messageIP = regip
 				
 				//regex end
 				
@@ -38,7 +65,7 @@ server.on("message", function(rawMessage) {
 				
 				var request = require("request")
 
-				var url = "http://api.ipinfodb.com/v3/ip-city/?key=6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb&ip=" + messageIP +  "&format=json"
+				var url = "http://api.ipinfodb.com/v3/ip-city/?key=6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb&ip=" + matches[i] +  "&format=json"
 				//console.log (url);
 				
 				request({
@@ -66,10 +93,10 @@ server.on("message", function(rawMessage) {
 						}
 				})
 
-				)};
+				
 		
 		} else {console.log("nothing")};
-
+}
   //  });
 });
 
