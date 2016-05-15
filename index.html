@@ -30,8 +30,9 @@
         <section id="main-content">
           <p>This project is based on the pewpew attack map project: <a href="https://github.com/hrbrmstr/pewpew">https://github.com/hrbrmstr/pewpew</a></p>
 
-<p>I liked it so much, but really wanted to see my own live data on there. I saw that they had added some custom support for MHN honeypot through some web sockets.  I decided to learn a little node.js and built a little node app hosts the web page and has a listener that listens on UDP 514 for any incoming messages, looks for IP addresses in the message, does a quick ip-geo lookup, and passes the coordinates to the web page, where your browser draws the arcs. The I figured you can configure anything you want to forward syslog messages to port 514.  Its still a little buggy, but works for the most part.
-<img src="screenshot.png" alt=""></p>
+<p>I liked it so much, but really wanted to see my own live data on there. I saw that they had added some custom support for MHN honeypot through some web sockets.  I decided to learn a little node.js and built a little node app hosts the web page and has a listener that listens on UDP 514 for any incoming messages, looks for IP addresses in the message, does a quick ip-geo lookup, and passes the coordinates to the web page, where your browser draws the arcs. The I figured you can configure anything you want to forward syslog messages to port 514.  Its still a little buggy, but works for the most part.</p>
+
+<p><img src="https://raw.githubusercontent.com/joshftx/maps/master/screenshot.png" alt=""></p>
         </section>
 
         <aside id="sidebar">
