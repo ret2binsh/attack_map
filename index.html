@@ -28,6 +28,14 @@
 <p>For this project, since all the destinations were at my datacenter, the destination is the same for every hit. You can adjust that at the top of geolistener.js.
 You will also need to get a free API key from <a href="http://www.ipinfodb.com/">http://www.ipinfodb.com/</a>. Make sure to throttle your source so you don't overload their servers and go over the free limit.  A goof future enhancement would be buffering of input requests and caching of results. Place this at the top of geolistener.js also.</p>
 
+<p>to get it started:</p>
+
+<p>node geolistener.js</p>
+
+<p>This will start a webserver on port 3000, which servers up the index.html located in public. It also starts the syslog listener on port 514. Make sure your firewall allows inbound UDP to 514, and if you have any local firewall running on your node server, you'll need to allow it to listen on 3000.</p>
+
+<p>You can check mine out here: <a href="http://gamehenge.duckdns.org:3000">http://gamehenge.duckdns.org:3000</a></p>
+
 <p>The required node modules are:
 d3, 
 express, 
