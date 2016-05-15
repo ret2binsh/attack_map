@@ -6,6 +6,11 @@ var d3   = require('d3');
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
 
+var apikey = '6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb'
+var mylat = '37'
+var mylong = '-122'
+
+
 app.use(express.static('public'));
 
 
@@ -50,7 +55,7 @@ for (i = 0; i < matches.length; i++) {
 				
 				var request = require("request")
 
-				var url = "http://api.ipinfodb.com/v3/ip-city/?key=6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb&ip=" + matches[i] +  "&format=json"
+				var url = "http://api.ipinfodb.com/v3/ip-city/?key=" + apikey + "&ip=" + matches[i] +  "&format=json"
 				//console.log (url);
 				
 				request({
@@ -67,8 +72,8 @@ for (i = 0; i < matches.length; i++) {
 								//build an arc array with FB Destination
 								
 								var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
-										latitude: 37.6688,
-										longitude: -122.0808 }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
+										latitude: mylat,
+										longitude: mylong }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
 								
 								//console.log(ipdestination)
 								//Send it
