@@ -25,7 +25,7 @@ body {
 
 #attackdiv {
   font-family: monospace;
-  font-size:10px;
+  font-size:14px;
   position:fixed;
   width:50%;
   height:100px;
@@ -33,7 +33,7 @@ body {
   background-color:black;
   padding:5px;
   bottom:0px;
-  overflow-y: auto;
+  overflow-y:hidden;
 }
 
 #container1 {
@@ -120,7 +120,7 @@ function about() {
 
 
   <center><div id="container1"></div></center>
-  <div id="titlediv">IPew Attack Map</div>
+  <div id="titlediv">My Attack Map</div>
   <div id="attackdiv"></div>
   <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
 
@@ -128,7 +128,7 @@ function about() {
   <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
   </div>
 
-  <div id="about">
+<!--   <div id="about">
   <h3>About IPew</h3>
   Attack maps are the <span style="font-family: monospace;">&lt;blink&gt;</span> tag of information security. They are pure eye candy, meant to scare the general public and <i>WOW</i> unsuspecting executives visiting Security Operations Centers. Yet, security vendors keep cranking them out. We didn't want organizations without "real" data or l33t animation skills to to feel left out, so we built this map for anyone to use [CC BY-SA]. Plus, they're all missing sound effects! And, most (all, really) use mind-numbingly dumb map projections, begging the question: <i>"Does Greenland make my map look big?"</i>.<br/>
   <br/>
@@ -137,7 +137,7 @@ function about() {
   Check out the <a target=_blank href='http://github.com/hrbrmstr/pewpew'>github repository</a> for more information and instructions on how to customize the map options for maximum effect.<br/>
   <br/>
   Brought to you by <a target=_blank href="http://twitter.com/alexcpsec">@alexcpsec</a>, <a target=_blank href="http://twitter.com/hrbrmstr">@hrbrmstr</a> &amp; <a target=_blank href="http://dds.ec/blog">Data-Driven Security</a>
-  </div>
+  </div> -->
 
   <!-- Use Hash-Bang to maintain scroll position when closing modal -->
   <a href="#!" class="modal-close" title="Close this modal"
@@ -152,32 +152,13 @@ function about() {
     attack_max = 2000 ;
 
     // add/change the attack types here
-    attack_type = [ "any port scan in a storm", "ssh brutish force", "Thought Leader Tweet",
-                    "SYN FLOOD BA-BY", "Spotty", "Heartbleed Hotel", "Po_ODLE", "Sharknado",
-                    "CORGI Attack", "Ping of DOOM", "Conficker", "Goldfinger", "SANDPAPER",
-                    "SNAILshock", "Spaghetti RAT", "Driduplex" ] ;
 
     // gotta add types here if you add more sounds (or delete them)
 
-    audio_type = [ "starwars", "tng", "b5", "wargames", "pew", "galaga" ]
+
 
     // need this to more easily grab URI query parameters
-    $.extend({
-      getUrlVars: function(){
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++)
-        {
-          hash = hashes[i].split('=');
-          vars.push(hash[0]);
-          vars[hash[0]] = hash[1];
-        }
-        return vars;
-      },
-      getUrlVar: function(name){
-        return $.getUrlVars()[name];
-      }
-    });
+
 
     // here's where we deal with parameters
     // try to grab them, see if they exist, make changes to defaults if they do
@@ -187,7 +168,7 @@ function about() {
 
 
 
-    if (typeof org_name !== 'undefined') { $("#titlediv").text(decodeURI(org_name) + " Attack Map").html() }
+   
 
     // we maintain a fixed queue of "attacks" via this class
     function FixedQueue( size, initialValues ){
@@ -246,12 +227,10 @@ function about() {
 
         scope: 'world',
         element: document.getElementById('container1'),
-        
-		projection: 'winkel3',
-	//	projection:'orthographic',
+        projection: 'winkel3',
         // change the projection to something else only if you have absolutely no cartographic sense
-	//
-//fills: { defaultFill: 'black', },
+		
+        fills: { defaultFill: 'black', },
 
         geographyConfig: {
           dataUrl: null,
@@ -270,6 +249,7 @@ function about() {
         },
 
       })
+	  map.graticule();
 
     // we read in a modified file of all country centers
 
@@ -291,34 +271,46 @@ function about() {
 
   
   var socket = io();
-
+ //socket.heartbeatTimeout = 10000
   socket.on('message', function(data){
     console.log(data.message);
     msg = data.message
-
+		var iplatitude = msg.latitude
+		var iplongitude = msg.longitude
+		var countryname = msg.countryName
+		var cityName = msg.cityName
+		var regionName = msg.regionName
 
    // window.setTimeout(function() {
    //maps.svg.selectAll('path.datamaps-arc').remove()
- 
+		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
+            latitude: 37.6688,
+            longitude: -122.0808 }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: false, animationSpeed: 600}}
 
 
 
-         hits.push(data.message);
+         hits.push(ipdestination);
 
          map.arc(hits);
-		
+
          // add boom to the bubbles queue
 
-         boom.push( { radius: 7, latitude: 37.6688,
-                longitude: -122.0808 ,
-                      fillOpacity: 0.5, attk: 'test' });
+         boom.push( { radius: 7, latitude: +iplatitude,
+                longitude: +iplongitude ,
+                      fillOpacity: 0.5, attk: 'countryname' });
          map.bubbles(boom, {
-              popupTemplate: function(geo, data) {
-                return '<div class="hoverinfo"></div>';
+              popupTemplate: function(geo, msg) {
+                return '<div class="hoverinfo">' + countryname + " " + cityName + ", " + regionName + '</div>';
               }
           });
        
-
+	              // update the scrolling attack div
+           $('#attackdiv').append(countryname + " (" + cityName + "," + regionName + ") " +
+                                 
+                                  " <span style='color:steelblue'>(" + msg.ipAddress + ")</span> " +
+                                  "<br/>");
+           $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
+			
 
          if (1==0) {
          }
@@ -328,7 +320,16 @@ function about() {
 
      });
 //
-
+ 
+ 
+  socket.on('disconnect', function() {
+    socketConnectTimeInterval = setInterval(function () {
+      socket.socket.reconnect();
+      if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
+    }, 3000);
+  });
+  
+  
 }
 
 
