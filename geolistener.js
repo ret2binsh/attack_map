@@ -6,7 +6,7 @@ var d3   = require('d3');
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
 
-var apikey = '6309d1e54af3ac465122d736a678351f56670c4e666a6345f8b88eaed8e315cb'
+var apikey = 'insertyourapikeyhere'
 
 
 
