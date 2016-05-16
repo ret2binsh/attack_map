@@ -48,7 +48,12 @@ You will also need to get a free API key from <a href="http://www.ipinfodb.com/"
 <p>The required node modules are:
 d3, 
 express, 
-socket.io, </p>
+socket.io,
+request</p>
+
+<p>In the test folder, there's a Powershell script you can use which will parse a CSV file and send the IP's to your listener.</p>
+<p>Otherwise you can test with netcat like this:</p>
+<p>echo -n "8.8.8.8"|nc -4u -w1 127.0.0.1 514 </p>
         </section>
 
         <aside id="sidebar">
