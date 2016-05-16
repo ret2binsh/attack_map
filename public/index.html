@@ -150,6 +150,9 @@ function about() {
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
+	
+	var mylat = '37';
+	var mylong = '-122';
 
     // add/change the attack types here
 
@@ -284,8 +287,8 @@ function about() {
    // window.setTimeout(function() {
    //maps.svg.selectAll('path.datamaps-arc').remove()
 		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
-            latitude: 37.6688,
-            longitude: -122.0808 }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: false, animationSpeed: 600}}
+            latitude: +mylat,
+            longitude: +mylong }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: false, animationSpeed: 600}}
 
 
 

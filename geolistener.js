@@ -13,7 +13,7 @@ var mylong = '-122'
 
 app.use(express.static('public'));
 
-
+//Function to get multiple regex matches into an array
 function getMatches(string, regex, index) {
   index || (index = 1); // default to the first capturing group
   var matches = [];
@@ -25,33 +25,22 @@ function getMatches(string, regex, index) {
 }
 
 
+//this starts the ball rolling when a message is received on 514 UDP
 
 server.on("message", function(rawMessage) {
-  //  syslogParser.parse(rawMessage.toString('utf8', 0), function(parsedMessage){
-
-
-	var myRegEx = /(\w*[.]\w*[.]\w*[.]\w*)/g;
+  
+	//regex to find IP addresses
+	var myRegEx = /(\d*[.]\d*[.]\d*[.]\d*)/g;
 	var matches = getMatches(rawMessage, myRegEx, 1);
 
 	console.log(matches);
-
+	
+//now do this for each match found...
 for (i = 0; i < matches.length; i++) { 
 
+		if ( matches[i].substring(0,3) != "74." && matches[i].substring(0,6) != "66.120" && matches != null && matches[i] != "0.0.0.0" ) {
 
-		//	regex
-		
-		if (matches != null && matches[i] != "0.0.0.0") {
-
-
-
-				//console.log("Found IP " + ip);
-			//messageIP = regip
-				
-				//regex end
-				
-				
-					
-				//geolocate
+				//geolocate using the ipinfodb - this returns JSON with geocoordinates
 				
 				var request = require("request")
 
@@ -66,16 +55,7 @@ for (i = 0; i < matches.length; i++) {
 						if (!error && response.statusCode === 200) {
 							   // console.log(body) // Print the json response
 								
-								var iplatitude = body.latitude
-								var iplongitude = body.longitude
 								
-								//build an arc array with FB Destination
-								
-								var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
-										latitude: mylat,
-										longitude: mylong }, options: {strokeWidth:3 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: true, animationSpeed: 600}}
-								
-								//console.log(ipdestination)
 								//Send it
 								io.emit('message', {'message': body, for: 'everyone'});
 			
@@ -95,7 +75,7 @@ for (i = 0; i < matches.length; i++) {
 
 server.on("listening", function() {
     var address = server.address();
-    console.log("Server now listening at " + 
+    console.log("UDP Server now listening at " + 
         address.address + ":" + address.port);
 });
 
@@ -103,3 +83,4 @@ server.bind(514); // Remember ports < 1024 need suid
 
 
 http.listen(3000);
+console.log("web server listening on port 3000")
