@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: black
+}
+
+#titlediv {
+  font-family: arial;
+  text-align: center;
+  font-size:48px;
+  font-weight:bold;
+  position:fixed;
+  width:100%;
+  height:50px;
+  color:white;
+  background-color:black;
+  padding:5px;
+  top:0px;
+  overflow-y: auto;
+}
+
+#attackdiv {
+  font-family: monospace;
+  font-size:18px;
+  position:fixed;
+  width:40%;
+  height:140px;
+  color:white;
+  background-color:black;
+  padding:5px;
+  bottom:0px;
+  overflow-y:hidden;
+}
+
+#container1 {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-width:100%;
+  max-height:100%
+ 
+}
+
+#about {
+  display: hidden;
+}
+.graticule {
+  fill: none;
+  stroke: #bbb;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+#aboutdiv {
+  text-align:right;
+  width:100px;
+  height:100px;
+  top:0px;
+  right:0px;
+  position:fixed;
+  padding:10px;
+  color: white;
+}
+
+#ccdiv {
+  text-align:right;
+  width:100px;
+  height:20px;
+  bottom:0px;
+  right:0px;
+  position:fixed;
+  padding:5px;
+  color: white;
+}
+
+#about {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000;}
+
+/* Container */
+#simplemodal-container {height:460px; width:600px; color:#bbb; background-color:#333; border:4px solid #444; padding:12px;}
+#simplemodal-container .simplemodal-data {padding:8px;}
+#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a {color:#ddd;}
+#simplemodal-container a.modalCloseImg {background:url(../img/basic/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+#simplemodal-container h3 {color:#84b8d9;}
+#simplemodal-container a.modalCloseImg {
+  background:url(x.png) no-repeat; /* adjust url as required */
+  width:25px;
+  height:29px;
+  display:inline;
+  z-index:3200;
+  position:absolute;
+  top:-15px;
+  right:-18px;
+  cursor:pointer;
+}
+
+</style>
+
+<script src="d3.v3.min.js"></script>
+<script src="d3.geo.projection.v0.min.js"></script>
+<script src="topojson.v1.min.js"></script>
+<script src="datamaps.world.min.js"></script>
+<script src="jquery-2.1.1.min.js"></script>
+<script src="sockjs.min.js"></script>
+<script src="jquery.simplemodal-1.4.4.js"></script>
+<script src="socket.io-1.4.5.js"></script>
+
+
+<script>
+function about() {
+  $("#about").modal();
+}
+</script>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+  <center><div id="container1"></div></center>
+  <div id="titlediv">Who is Attacking Fremont Bank Right Now</div>
+  <div id="attackdiv"></div>
+  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
+
+  <div id="ccdiv">
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+  </div>
+
+<!--   <div id="about">
+  <h3>About IPew</h3>
+  Attack maps are the <span style="font-family: monospace;">&lt;blink&gt;</span> tag of information security. They are pure eye candy, meant to scare the general public and <i>WOW</i> unsuspecting executives visiting Security Operations Centers. Yet, security vendors keep cranking them out. We didn't want organizations without "real" data or l33t animation skills to to feel left out, so we built this map for anyone to use [CC BY-SA]. Plus, they're all missing sound effects! And, most (all, really) use mind-numbingly dumb map projections, begging the question: <i>"Does Greenland make my map look big?"</i>.<br/>
+  <br/>
+  The default map uses a statistical model (infrequently updated) for source "attack" node country of origin &amp; frequency while destinations are fully randomized. The default sound is a Star Wars "blaster" (guess which one!). Sounds can be customized and an organization name can be specified, plus there are a few other <i>interesting</i> options.<br/>
+  <br/>
+  Check out the <a target=_blank href='http://github.com/hrbrmstr/pewpew'>github repository</a> for more information and instructions on how to customize the map options for maximum effect.<br/>
+  <br/>
+  Brought to you by <a target=_blank href="http://twitter.com/alexcpsec">@alexcpsec</a>, <a target=_blank href="http://twitter.com/hrbrmstr">@hrbrmstr</a> &amp; <a target=_blank href="http://dds.ec/blog">Data-Driven Security</a>
+  </div> -->
+
+  <!-- Use Hash-Bang to maintain scroll position when closing modal -->
+  <a href="#!" class="modal-close" title="Close this modal"
+      data-dismiss="modal" data-close="Close">&times;</a>
+</section>
+
+
+  <script>
+
+    // setup default min/max timer range for random draw
+    attack_min = 100 ;
+    attack_max = 2000 ;
+	
+	var mylat = '37';
+	var mylong = '-122';
+
+    // add/change the attack types here
+
+    // gotta add types here if you add more sounds (or delete them)
+
+
+
+    // need this to more easily grab URI query parameters
+
+
+    // here's where we deal with parameters
+    // try to grab them, see if they exist, make changes to defaults if they do
+
+
+  
+
+
+
+   
+
+    // we maintain a fixed queue of "attacks" via this class
+    function FixedQueue( size, initialValues ){
+      initialValues = (initialValues || []);
+      var queue = Array.apply( null, initialValues );
+      queue.fixedSize = size;
+      queue.push = FixedQueue.push;
+      queue.splice = FixedQueue.splice;
+      queue.unshift = FixedQueue.unshift;
+      FixedQueue.trimTail.call( queue );
+      return( queue );
+    }
+
+    FixedQueue.trimHead = function(){
+      if (this.length <= this.fixedSize){ return; }
+      Array.prototype.splice.call( this, 0, (this.length - this.fixedSize) );
+    };
+
+    FixedQueue.trimTail = function(){
+      if (this.length <= this.fixedSize) { return; }
+      Array.prototype.splice.call( this, this.fixedSize, (this.length - this.fixedSize)
+      );
+    };
+
+    FixedQueue.wrapMethod = function( methodName, trimMethod ){
+      var wrapper = function(){
+        var method = Array.prototype[ methodName ];
+        var result = method.apply( this, arguments );
+        trimMethod.call( this );
+        return( result );
+      };
+      return( wrapper );
+    };
+
+    FixedQueue.push = FixedQueue.wrapMethod( "push", FixedQueue.trimHead );
+    FixedQueue.splice = FixedQueue.wrapMethod( "splice", FixedQueue.trimTail );
+    FixedQueue.unshift = FixedQueue.wrapMethod( "unshift", FixedQueue.trimTail );
+
+    var rand = function(min, max) {
+        return Math.random() * (max - min) + min;
+    };
+
+
+
+    // need to make this dynamic since it's approximated from sources
+
+
+    // the fun begins!
+    //
+    // pretty simple setup ->
+    // * make base Datamap
+    // * setup timers to add random events to a queue
+    // * update the Datamap
+
+    var map = new Datamap({
+
+        scope: 'world',
+        element: document.getElementById('container1'),
+
+		setProjection: function(element) {
+		var projection = d3.geo.winkel3()
+		
+		.rotate([97,-30])
+		.scale(240)
+		.translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+		var path = d3.geo.path()
+		.projection(projection);
+
+		return {path: path, projection: projection};
+		},
+		data: {ABW: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AFG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AGO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AIA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ALB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ALD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AND: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ARE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ARG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ARM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ASM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ATA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ATC: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ATF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ATG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AUS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AUT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	AZE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BDI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BEL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BEN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BFA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BGD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BGR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BHR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BHS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BIH: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BJN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BLM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BLR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BLZ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BMU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BOL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BRA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BRB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BRN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BTN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NOR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	BWA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CAF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CAN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CHE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CHL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CHN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CIV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CLP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CMR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	COD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	COG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	COK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	COL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	COM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CPV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CRI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CSI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CUB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CUW: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CYM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CYN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CYP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	CZE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DEU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DJI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DMA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DNK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DOM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	DZA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ECU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	EGY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ERI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ESB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ESP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	EST: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ETH: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FIN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FJI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FLK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FRA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FRO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	FSM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GAB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PSX: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GBR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GEO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GGY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GHA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GIB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GIN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GMB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GNB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GNQ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GRC: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GRD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GRL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GTM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GUM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	GUY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HKG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HMD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HND: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HRV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HTI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	HUN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IDN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IMN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IND: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IOA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IOT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IRL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IRN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	IRQ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ISL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ISR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ITA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	JAM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	JEY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	JOR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	JPN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KAB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KAS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KAZ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KEN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KGZ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KHM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KIR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KNA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KOR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KOS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	KWT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LAO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LBN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LBR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LBY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LCA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LIE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LKA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LSO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LTU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LUX: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	LVA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MAC: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MAF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MAR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MCO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MDA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MDG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MDV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MEX: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MHL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MKD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MLI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MLT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MMR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MNE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MNG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MNP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MOZ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MRT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MSR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MUS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MWI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	MYS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NAM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NCL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NER: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NFK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NGA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NIC: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NIU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NLD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NPL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NRU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NUL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	NZL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	OMN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PAK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PAN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PCN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PER: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PGA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PHL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PLW: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PNG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	POL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PRI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PRK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PRT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PRY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	PYF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	QAT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ROU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	RUS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	RWA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SAH: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SAU: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SCR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SDN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SDS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SEN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SER: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SGP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SGS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SHN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SLB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SLE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SLV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SMR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SOL: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SOM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SPM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SRB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	STP: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SUR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SVK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SVN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SWE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SWZ: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SXM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SYC: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	SYR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TCA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TCD: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TGO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	THA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TJK: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TKM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TLS: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TON: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TTO: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TUN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TUR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TUV: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TWN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	TZA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	UGA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	UKR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	UMI: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	URY: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	USA: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	USG: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	UZB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VAT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VCT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VEN: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VGB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VIR: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VNM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	VUT: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	WLF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	WSB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	WSM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	YEM: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ZAF: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ZMB: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))},	ZWE: { fillColor:  ('#'+Math.floor(Math.random()*16777215).toString(16))}},
+		
+
+				defaultFill: "#ABDDA4",
+	
+        geographyConfig: {
+          dataUrl: null,
+          hideAntarctica: false,
+          borderWidth: 1.75,
+          borderColor: '#4393c3',
+          popupTemplate: function(geography, data) {
+            return '<div class="hoverinfo" style="color:white;background:black">' +
+                   geography.properties.name + '</div>';
+          },
+          popupOnHover: true,
+          highlightOnHover: true,
+          highlightFillColor: 'yellow',
+          highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
+          highlightBorderWidth: 3
+        },
+
+      })
+	  map.graticule();
+
+    // we read in a modified file of all country centers
+
+
+    // setup structures for the "hits" (arcs)
+    // and circle booms
+
+    var hits = FixedQueue( 10, [  ] );
+    var boom = FixedQueue( 10, [  ] );
+
+
+
+    // doing this a bit fancy for a hack, but it makes it
+    // easier to group code functions together and have variables
+    // out of global scope
+
+     
+    do_mhn = function() {
+
+  
+  var socket = io();
+ //socket.heartbeatTimeout = 10000
+  socket.on('message', function(data){
+    console.log(data.message);
+    msg = data.message
+		var iplatitude = msg.latitude
+		var iplongitude = msg.longitude
+		var countryname = msg.countryName
+		var cityName = msg.cityName
+		var regionName = msg.regionName
+
+   // window.setTimeout(function() {
+   //maps.svg.selectAll('path.datamaps-arc').remove()
+		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
+            latitude: +mylat,
+            longitude: +mylong }, options: {strokeWidth:8 , strokeColor: 'rgba(255, 255, 0, 0.6)', greatArc: false, animationSpeed: 600}}
+
+
+
+         hits.push(ipdestination);
+
+         map.arc(hits);
+
+         // add boom to the bubbles queue
+
+         boom.push( { radius:8, latitude: +iplatitude,
+                longitude: +iplongitude ,exitDelay: 10,
+                      fillOpacity: .5, fillkey: 'gt50',  animate:true, attk: 'countryname' });
+         map.bubbles(boom, {
+              popupTemplate: function(geo, msg) {
+                return '<div class="hoverinfo">' + countryname + " " + cityName + ", " + regionName + '</div>';
+              }
+          });
+       
+	              // update the scrolling attack div
+           $('#attackdiv').append(countryname + " (" + cityName + "," + regionName + ") " +
+                                 
+                                  " <span style='color:steelblue'>(" + msg.ipAddress + ")</span> " +
+                                  "<br/>");
+           $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
+			
+
+         if (1==0) {
+         }
+
+// }, 750);
+
+
+     });
+//
+ 
+ 
+  socket.on('disconnect', function() {
+    socketConnectTimeInterval = setInterval(function () {
+      socket.socket.reconnect();
+      if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
+    }, 3000);
+  });
+  
+  
+}
+
+
+   // console.log(mhnsource);
+
+    // start the ball rolling!
+      do_mhn();
+
+
+    // lazy-dude's responsive window
+    d3.select(window).on('resize', function() { location.reload(); });
+
+</script>
+
+</body>
+</html>
+
