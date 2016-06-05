@@ -154,25 +154,6 @@ function about() {
 	var mylat = '37';
 	var mylong = '-122';
 
-    // add/change the attack types here
-
-    // gotta add types here if you add more sounds (or delete them)
-
-
-
-    // need this to more easily grab URI query parameters
-
-
-    // here's where we deal with parameters
-    // try to grab them, see if they exist, make changes to defaults if they do
-
-
-  
-
-
-
-   
-
     // we maintain a fixed queue of "attacks" via this class
     function FixedQueue( size, initialValues ){
       initialValues = (initialValues || []);
@@ -215,15 +196,6 @@ function about() {
     };
 
 
-
-    // need to make this dynamic since it's approximated from sources
-
-
-    // the fun begins!
-    //
-    // pretty simple setup ->
-    // * make base Datamap
-    // * setup timers to add random events to a queue
     // * update the Datamap
 
     var map = new Datamap({
@@ -252,25 +224,14 @@ function about() {
         },
 
       })
-	  map.graticule();
 
-    // we read in a modified file of all country centers
+map.graticule();
 
-
-    // setup structures for the "hits" (arcs)
-    // and circle booms
-
-    var hits = FixedQueue( 7, [  ] );
-    var boom = FixedQueue( 7, [  ] );
-
-
-
-    // doing this a bit fancy for a hack, but it makes it
-    // easier to group code functions together and have variables
-    // out of global scope
+var hits = FixedQueue( 7, [  ] );
+var boom = FixedQueue( 7, [  ] );
 
      
-    do_mhn = function() {
+ do_mhn = function() {
 
   
   var socket = io();
@@ -283,9 +244,6 @@ function about() {
 		var countryname = msg.countryName
 		var cityName = msg.cityName
 		var regionName = msg.regionName
-
-   // window.setTimeout(function() {
-   //maps.svg.selectAll('path.datamaps-arc').remove()
 		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
             latitude: +mylat,
             longitude: +mylong }, options: {strokeWidth:4 , strokeColor: 'rgba(255, 0, 0, 0.4)', greatArc: false, animationSpeed: 600}}
@@ -318,11 +276,8 @@ function about() {
          if (1==0) {
          }
 
-// }, 750);
-
 
      });
-//
  
  
   socket.on('disconnect', function() {
@@ -334,9 +289,6 @@ function about() {
   
   
 }
-
-
-   // console.log(mhnsource);
 
     // start the ball rolling!
       do_mhn();
