@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+top: 40px;
+}
+
+#titlediv {
+  font-family: arial;
+  text-align: center;
+  font-size:48px;
+  font-weight:bold;
+  position:fixed;
+  width:100%;
+  height:50px;
+  color:black;
+background-color:white;
+  padding:5px;
+  top:0px;
+  overflow-y: auto;
+}
+
+#footerdiv {
+  font-family: arial;
+  text-align: left;
+  font-size:30px;
+  font-weight:bold;
+  position:fixed;
+  width:100%;
+  height:75px;
+  color:black;
+background-color:white;
+  padding:5px;
+  bottom:0px;
+  left: 45px;
+  overflow-y: auto;
+}
+
+#attackdiv {
+  font-family: monospace;
+  font-size:18px;
+  font-weight:bold;
+  position:fixed;
+  width:350px;
+  top: 60px;
+  color:black;
+  padding:5px;
+  bottom:20px;
+  right: 20px;
+  overflow-y:hidden;
+  border-style:solid;
+}
+
+#container1 {
+ background-image: url("map.jpg");
+ background-repeat: no-repeat;
+  background-position: 45px, 100px;
+   width: 1453px;
+  height: 939px;
+ 
+   position: fixed;
+}
+
+#about {
+  display: hidden;
+}
+
+#aboutdiv {
+  text-align:right;
+  width:100px;
+  height:100px;
+  top:0px;
+  right:0px;
+  position:fixed;
+  padding:10px;
+  color: white;
+}
+
+#ccdiv {
+  text-align:right;
+  width:100px;
+  height:20px;
+  bottom:0px;
+  right:0px;
+  position:fixed;
+  padding:5px;
+  color: white;
+}
+
+#about {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000;}
+
+/* Container */
+#simplemodal-container {height:460px; width:600px; color:#bbb; background-color:#333; border:4px solid #444; padding:12px;}
+#simplemodal-container .simplemodal-data {padding:8px;}
+#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a {color:#ddd;}
+#simplemodal-container a.modalCloseImg {background:url(../img/basic/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+#simplemodal-container h3 {color:#84b8d9;}
+#simplemodal-container a.modalCloseImg {
+  background:url(x.png) no-repeat; /* adjust url as required */
+  width:25px;
+  height:29px;
+  display:inline;
+  z-index:3200;
+  position:absolute;
+  top:-15px;
+  right:-18px;
+  cursor:pointer;
+}
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script src="jquery.simplemodal-1.4.4.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+
+<script>
+function about() {
+  $("#about").modal();
+}
+</script>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+  <center><div id="container1"></div></center>
+  <div id="titlediv">Who is Attacking Right Now</div>
+   <div id="footerdiv">This map shows a live feed of traffic being actively blocked by security systems</div>
+  <div id="attackdiv"></div>
+  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
+
+  <div id="ccdiv">
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+  </div>
+
+
+
+
+</section>
+
+
+  <script>
+
+    // setup default min/max timer range for random draw
+    attack_min = 100 ;
+    attack_max = 2000 ;
+	
+	var mylat = '37';
+	var mylong = '-122';
+
+
+
+    // we maintain a fixed queue of "attacks" via this class
+    function FixedQueue( size, initialValues ){
+      initialValues = (initialValues || []);
+      var queue = Array.apply( null, initialValues );
+      queue.fixedSize = size;
+      queue.push = FixedQueue.push;
+      queue.splice = FixedQueue.splice;
+      queue.unshift = FixedQueue.unshift;
+      FixedQueue.trimTail.call( queue );
+      return( queue );
+    }
+
+    FixedQueue.trimHead = function(){
+      if (this.length <= this.fixedSize){ return; }
+      Array.prototype.splice.call( this, 0, (this.length - this.fixedSize) );
+    };
+
+    FixedQueue.trimTail = function(){
+      if (this.length <= this.fixedSize) { return; }
+      Array.prototype.splice.call( this, this.fixedSize, (this.length - this.fixedSize)
+      );
+    };
+
+    FixedQueue.wrapMethod = function( methodName, trimMethod ){
+      var wrapper = function(){
+        var method = Array.prototype[ methodName ];
+        var result = method.apply( this, arguments );
+        trimMethod.call( this );
+        return( result );
+      };
+      return( wrapper );
+    };
+
+    FixedQueue.push = FixedQueue.wrapMethod( "push", FixedQueue.trimHead );
+    FixedQueue.splice = FixedQueue.wrapMethod( "splice", FixedQueue.trimTail );
+    FixedQueue.unshift = FixedQueue.wrapMethod( "unshift", FixedQueue.trimTail );
+
+    var rand = function(min, max) {
+        return Math.random() * (max - min) + min;
+    };
+
+
+
+    // need to make this dynamic since it's approximated from sources
+
+
+    // the fun begins!
+    //
+    // pretty simple setup ->
+    // * make base Datamap
+    // * setup timers to add random events to a queue
+    // * update the Datamap
+
+    var map = new Datamap({
+
+        scope: 'world',
+        element: document.getElementById('container1'),
+       projection: 'mercator',
+        // change the projection to something else only if you have absolutely no cartographic sense
+		  projectionConfig: {
+
+
+		},
+		
+		height: 939,
+		width: 1453,
+		
+        fills: { gt50: 'red',
+				defaultFill: 'rgba(250, 15, 160, 0)'
+				//defaultFill: "#ABDDA4"
+				},
+
+        geographyConfig: {
+          dataUrl: null,
+          hideAntarctica: true,
+          borderWidth: 1.75,
+          borderColor: 'rgba(250, 15, 160, 0)',
+          popupTemplate: function(geography, data) {
+            return '<div class="hoverinfo" style="color:white;background:black">' +
+                   geography.properties.name + '</div>';
+          },
+          popupOnHover: true,
+          highlightOnHover: true,
+          highlightFillColor: 'rgba(250, 15, 160, 0)',
+          highlightBorderColor: 'rgba(250, 15, 160, 1)',
+          highlightBorderWidth: 2
+		 
+        },
+
+      })
+	//  map.graticule();
+
+    // we read in a modified file of all country centers
+
+
+    // setup structures for the "hits" (arcs)
+    // and circle booms
+
+    var hits = FixedQueue( 10, [  ] );
+    var boom = FixedQueue( 10, [  ] );
+
+
+
+    // doing this a bit fancy for a hack, but it makes it
+    // easier to group code functions together and have variables
+    // out of global scope
+
+     
+    do_mhn = function() {
+
+  
+  var socket = io();
+ //socket.heartbeatTimeout = 10000
+  socket.on('message', function(data){
+    console.log(data.message);
+    msg = data.message
+		var iplatitude = msg.latitude
+		var iplongitude = msg.longitude
+		var countryname = msg.countryName
+		var cityName = msg.cityName
+		var regionName = msg.regionName
+
+   // window.setTimeout(function() {
+   //maps.svg.selectAll('path.datamaps-arc').remove()
+		var ipdestination = {origin: {latitude: +iplatitude, longitude: +iplongitude}, destination: {
+            latitude: +mylat,
+            longitude: +mylong }, options: {strokeWidth:8 , strokeColor: 'rgba(255, 255, 0, 0.6)', greatArc: false, animationSpeed: 600}}
+
+
+
+         hits.push(ipdestination);
+
+         map.arc(hits);
+
+         // add boom to the bubbles queue
+
+         boom.push( { radius:8, latitude: +iplatitude,
+                longitude: +iplongitude ,exitDelay: 10,
+                      fillOpacity: .5, fillkey: 'gt50',  animate:true, attk: 'countryname' });
+         map.bubbles(boom, {
+              popupTemplate: function(geo, msg) {
+                return '<div class="hoverinfo">' + countryname + " " + cityName + ", " + regionName + '</div>';
+              }
+          });
+       
+	              // update the scrolling attack div
+           $('#attackdiv').append(countryname +
+                                 
+                                  " <span style='color:red'>(" + msg.ipAddress + ")</span> " +
+                                  "<br/>");
+           $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
+			
+
+         if (1==0) {
+         }
+
+// }, 750);
+
+
+     });
+//
+ 
+ 
+  socket.on('disconnect', function() {
+    socketConnectTimeInterval = setInterval(function () {
+      socket.socket.reconnect();
+      if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
+    }, 3000);
+  });
+  
+  
+}
+
+
+   // console.log(mhnsource);
+
+    // start the ball rolling!
+      do_mhn();
+
+
+    // lazy-dude's responsive window
+ //   d3.select(window).on('resize', function() { location.reload(); });
+
+</script>
+
+</body>
+</html>
+
