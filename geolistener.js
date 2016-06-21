@@ -48,6 +48,7 @@ for (i = 0; i < matches.length; i++) {
 				
 				request({
 					url: url,
+					rejectUnauthorized: false,
 					json: true
 				}, function (error, response, body) {
 
