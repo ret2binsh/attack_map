@@ -7,6 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background: black;
+  overflow: hidden;
 }
 
 #titlediv {
@@ -20,7 +21,7 @@ body {
   background-color:black;
   padding:5px;
   top:0px;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 #attackdiv {
@@ -44,33 +45,7 @@ body {
   max-height:100%
 }
 
-#about {
-  display: hidden;
-}
 
-#aboutdiv {
-  text-align:right;
-  width:100px;
-  height:100px;
-  top:0px;
-  right:0px;
-  position:fixed;
-  padding:10px;
-  color: white;
-}
-
-#ccdiv {
-  text-align:right;
-  width:100px;
-  height:20px;
-  bottom:0px;
-  right:0px;
-  position:fixed;
-  padding:5px;
-  color: white;
-}
-
-#about {display:none;}
 
 /* Overlay */
 #simplemodal-overlay {background-color:#000;}
@@ -120,24 +95,9 @@ function about() {
 
 
   <center><div id="container1"></div></center>
-  <div id="titlediv">My Attack Map</div>
+  <div id="titlediv">CWO Attack Map</div>
   <div id="attackdiv"></div>
-  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
 
-  <div id="ccdiv">
-  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
-  </div>
-
-<!--   <div id="about">
-  <h3>About IPew</h3>
-  Attack maps are the <span style="font-family: monospace;">&lt;blink&gt;</span> tag of information security. They are pure eye candy, meant to scare the general public and <i>WOW</i> unsuspecting executives visiting Security Operations Centers. Yet, security vendors keep cranking them out. We didn't want organizations without "real" data or l33t animation skills to to feel left out, so we built this map for anyone to use [CC BY-SA]. Plus, they're all missing sound effects! And, most (all, really) use mind-numbingly dumb map projections, begging the question: <i>"Does Greenland make my map look big?"</i>.<br/>
-  <br/>
-  The default map uses a statistical model (infrequently updated) for source "attack" node country of origin &amp; frequency while destinations are fully randomized. The default sound is a Star Wars "blaster" (guess which one!). Sounds can be customized and an organization name can be specified, plus there are a few other <i>interesting</i> options.<br/>
-  <br/>
-  Check out the <a target=_blank href='http://github.com/hrbrmstr/pewpew'>github repository</a> for more information and instructions on how to customize the map options for maximum effect.<br/>
-  <br/>
-  Brought to you by <a target=_blank href="http://twitter.com/alexcpsec">@alexcpsec</a>, <a target=_blank href="http://twitter.com/hrbrmstr">@hrbrmstr</a> &amp; <a target=_blank href="http://dds.ec/blog">Data-Driven Security</a>
-  </div> -->
 
   <!-- Use Hash-Bang to maintain scroll position when closing modal -->
   <a href="#!" class="modal-close" title="Close this modal"
@@ -150,9 +110,9 @@ function about() {
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
-	
-	var mylat = '37';
-	var mylong = '-122';
+
+	var mylat = '39';
+	var mylong = '125';
 
     // we maintain a fixed queue of "attacks" via this class
     function FixedQueue( size, initialValues ){
@@ -204,7 +164,7 @@ function about() {
         element: document.getElementById('container1'),
         projection: 'winkel3',
         // change the projection to something else only if you have absolutely no cartographic sense
-		
+
         fills: { defaultFill: 'black', },
 
         geographyConfig: {
@@ -217,8 +177,8 @@ function about() {
                    geography.properties.name + '</div>';
           },
           popupOnHover: true,
-          highlightOnHover: false,
-          highlightFillColor: 'black',
+          highlightOnHover: true,
+          highlightFillColor: 'red',
           highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
           highlightBorderWidth: 2
         },
@@ -230,10 +190,10 @@ map.graticule();
 var hits = FixedQueue( 7, [  ] );
 var boom = FixedQueue( 7, [  ] );
 
-     
+
  do_mhn = function() {
 
-  
+
   var socket = io();
  //socket.heartbeatTimeout = 10000
   socket.on('message', function(data){
@@ -264,30 +224,30 @@ var boom = FixedQueue( 7, [  ] );
                 return '<div class="hoverinfo">' + countryname + " " + cityName + ", " + regionName + '</div>';
               }
           });
-       
+
 	              // update the scrolling attack div
            $('#attackdiv').append(countryname + " (" + cityName + "," + regionName + ") " +
-                                 
+
                                   " <span style='color:steelblue'>(" + msg.ipAddress + ")</span> " +
                                   "<br/>");
            $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
-			
+
 
          if (1==0) {
          }
 
 
      });
- 
- 
+
+
   socket.on('disconnect', function() {
     socketConnectTimeInterval = setInterval(function () {
       socket.socket.reconnect();
       if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
-    }, 3000);
+    }, 3000); //3000
   });
-  
-  
+
+
 }
 
     // start the ball rolling!
@@ -301,4 +261,3 @@ var boom = FixedQueue( 7, [  ] );
 
 </body>
 </html>
-

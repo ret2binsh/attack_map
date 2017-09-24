@@ -61,24 +61,10 @@ background-color:white;
   background-position: 45px, 100px;
    width: 1453px;
   height: 939px;
- 
+
    position: fixed;
 }
 
-#about {
-  display: hidden;
-}
-
-#aboutdiv {
-  text-align:right;
-  width:100px;
-  height:100px;
-  top:0px;
-  right:0px;
-  position:fixed;
-  padding:10px;
-  color: white;
-}
 
 #ccdiv {
   text-align:right;
@@ -144,7 +130,6 @@ function about() {
   <div id="titlediv">Who is Attacking Right Now</div>
    <div id="footerdiv">This map shows a live feed of traffic being actively blocked by security systems</div>
   <div id="attackdiv"></div>
-  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
 
   <div id="ccdiv">
   <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
@@ -161,7 +146,7 @@ function about() {
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
-	
+
 	var mylat = '37';
 	var mylong = '-122';
 
@@ -230,10 +215,10 @@ function about() {
 
 
 		},
-		
+
 		height: 939,
 		width: 1453,
-		
+
         fills: { gt50: 'red',
 				defaultFill: 'rgba(250, 15, 160, 0)'
 				//defaultFill: "#ABDDA4"
@@ -253,7 +238,7 @@ function about() {
           highlightFillColor: 'rgba(250, 15, 160, 0)',
           highlightBorderColor: 'rgba(250, 15, 160, 1)',
           highlightBorderWidth: 2
-		 
+
         },
 
       })
@@ -274,10 +259,10 @@ function about() {
     // easier to group code functions together and have variables
     // out of global scope
 
-     
+
     do_mhn = function() {
 
-  
+
   var socket = io();
  //socket.heartbeatTimeout = 10000
   socket.on('message', function(data){
@@ -311,14 +296,14 @@ function about() {
                 return '<div class="hoverinfo">' + countryname + " " + cityName + ", " + regionName + '</div>';
               }
           });
-       
+
 	              // update the scrolling attack div
            $('#attackdiv').append(countryname +
-                                 
+
                                   " <span style='color:red'>(" + msg.ipAddress + ")</span> " +
                                   "<br/>");
            $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
-			
+
 
          if (1==0) {
          }
@@ -328,16 +313,16 @@ function about() {
 
      });
 //
- 
- 
+
+
   socket.on('disconnect', function() {
     socketConnectTimeInterval = setInterval(function () {
       socket.socket.reconnect();
       if(socket.socket.connected) {clearInterval(socketConnectTimeInterval);}
     }, 3000);
   });
-  
-  
+
+
 }
 
 
@@ -354,4 +339,3 @@ function about() {
 
 </body>
 </html>
-

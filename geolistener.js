@@ -6,7 +6,7 @@ var d3   = require('d3');
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
 
-var apikey = 'insertyourapikeyhere'
+var apikey = 'api_key.txt'
 
 
 
@@ -27,25 +27,25 @@ function getMatches(string, regex, index) {
 //this starts the ball rolling when a message is received on 514 UDP
 
 server.on("message", function(rawMessage) {
-  
+
 	//regex to find IP addresses
 	var myRegEx = /(\d*[.]\d*[.]\d*[.]\d*)/g;
 	var matches = getMatches(rawMessage, myRegEx, 1);
 
 	console.log(matches);
-	
+
 //now do this for each match found...
-for (i = 0; i < matches.length; i++) { 
+for (i = 0; i < matches.length; i++) {
 
 		if ( matches[i].substring(0,3) != "74." && matches[i].substring(0,6) != "66.120" && matches != null && matches[i] != "0.0.0.0" ) {
 
 				//geolocate using the ipinfodb - this returns JSON with geocoordinates
-				
+
 				var request = require("request")
 
 				var url = "http://api.ipinfodb.com/v3/ip-city/?key=" + apikey + "&ip=" + matches[i] +  "&format=json"
 				//console.log (url);
-				
+
 				request({
 					url: url,
 					rejectUnauthorized: false,
@@ -53,18 +53,18 @@ for (i = 0; i < matches.length; i++) {
 				}, function (error, response, body) {
 
 						if (!error && response.statusCode === 200) {
-							   // console.log(body) // Print the json response
-								
-								
+							    //console.log(response) // Print the json response
+
+
 								//Send it
 								io.emit('message', {'message': body, for: 'everyone'});
-			
-						
+
+
 						}
 				})
 
-				
-		
+
+
 		} else {console.log("nothing")};
 }
   //  });
@@ -75,7 +75,7 @@ for (i = 0; i < matches.length; i++) {
 
 server.on("listening", function() {
     var address = server.address();
-    console.log("UDP Server now listening at " + 
+    console.log("UDP Server now listening at " +
         address.address + ":" + address.port);
 });
 
