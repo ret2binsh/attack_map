@@ -6,7 +6,24 @@ var d3   = require('d3');
 var dgram  = require("dgram");
 var server = dgram.createSocket("udp4");
 
-var apikey = 'api_key.txt'
+//Read the api key from a separate file to protect against unauthorized use
+const api_file = 'api_key.txt';
+const readline = require('readline');
+const fs = require('fs');
+
+const rl = readline.createInterface({
+  input: fs.createReadStream(api_file)
+});
+
+rl.on('line', function(line){
+  const apikey = line;
+  console.log('Your API Key is: ', apikey);
+});
+
+rl.close();
+//End of api key retrieval
+
+//var apikey = 'enter api key here' <--original
 
 
 
