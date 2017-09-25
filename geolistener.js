@@ -16,15 +16,16 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', function(line){
-  const apikey = line;
+  var apikey = line;
   console.log('Your API Key is: ', apikey);
 });
 
-rl.close();
+// rl.close();
+/*
+Need to close the readline stream but apikey is referencing the variable
+stored by line. Will to pass by value to reference.
+*/
 //End of api key retrieval
-
-//var apikey = 'enter api key here' <--original
-
 
 
 app.use(express.static('public'));
