@@ -11,7 +11,7 @@ For this project, since all the destinations were at my datacenter, the destinat
 
 This will start a webserver on port 3000, which servers up the index.html located in public. It also starts the syslog listener on port 514. Make sure your firewall allows inbound UDP to 514, and if you have any local firewall running on your node server, you'll need to allow it to listen on 3000.
 
-The required node modules are: d3, express, socket.io, request
+The required node modules are: **d3, express, socket.io, request**
 
 In the test folder, there's a Powershell script you can use which will parse a CSV file and send the IP's to your listener.
 
