@@ -7,7 +7,7 @@ For this project, since all the destinations were at my datacenter, the destinat
 
 To get it started:
 
-''' node geolistener.js '''
+  node geolistener.js
 
 This will start a webserver on port 3000, which servers up the index.html located in public. It also starts the syslog listener on port 514. Make sure your firewall allows inbound UDP to 514, and if you have any local firewall running on your node server, you'll need to allow it to listen on 3000.
 
@@ -17,4 +17,4 @@ In the test folder, there's a Powershell script you can use which will parse a C
 
 Otherwise you can test with netcat like this:
 
-''' echo -n "8.8.8.8"|nc -4u -w1 127.0.0.1 514 '''
+  echo -n "8.8.8.8"|nc -4u -w1 127.0.0.1 514
