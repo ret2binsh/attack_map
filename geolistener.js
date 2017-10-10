@@ -15,10 +15,13 @@ const rl = readline.createInterface({
   input: fs.createReadStream(api_file)
 });
 
+
 rl.on('line', function(line){
-  var apikey = line;
+  global.apikey = line;
   console.log('Your API Key is: ', apikey);
 });
+
+//var apikey = 
 
 // rl.close();
 /*
